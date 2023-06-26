@@ -5,9 +5,10 @@ var parseArgs = require('minimist');
 var grpc = require('@grpc/grpc-js');
 var protoLoader = require('@grpc/proto-loader');
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const app = express();
 
-const tenantHandler = require('./handlers/tenantHandler');
+const requestHandler = require('./handlers/requestHandler');
 
 var packageDefinition = protoLoader.loadSync(
     PROTO_PATH,
@@ -39,13 +40,20 @@ function main() {
     next();
   });
 
-  app.get('/',tenantHandler.handleRequest);
-  app.get('/tenants', tenantHandler.handleAllTenantRequest);
+  app.use(express.json());
+  app.use(cookieParser());
+
+  app.get('/',requestHandler.handleRequest);
+  app.get('/tenants', requestHandler.handleAllTenantRequest);
+  app.post('/tenant', requestHandler.handleAddTenant);
+  app.post('/user', requestHandler.handleSaveUser);
+  app.post('/folder', requestHandler.handleSaveFolder);
+  app.get('/folder', requestHandler.handleGetFolder);
 
 
   const port = 3000;
   app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
+    console.log(`Client listening on port ${port}`);
   });
 
 

@@ -10,6 +10,10 @@ service Gdrive {
 
   rpc SayHelloAgain (HelloRequest) returns (HelloReply) {}
   rpc GetAllTenants (HelloRequest) returns (TenantsReply) {}
+  rpc SaveTenant (TenantRequest) returns (HelloReply) {}
+  rpc SaveUser (UserRequest) returns (SuccessReply) {}
+  rpc SaveFolder (FolderRequest) returns (SuccessReply) {}
+  rpc GetUserFolder (FolderGetRequest) returns (FolderReply) {}
 
 }
 
@@ -23,6 +27,11 @@ message HelloReply {
   string message = 1;
 }
 
+message SuccessReply {
+  string code = 1;
+  string message = 2;
+}
+
 message TenantsReply {
   repeated TenantObject data = 1;
 }
@@ -31,5 +40,36 @@ message TenantObject{
   string _id = 1;
   string name = 2;
   string dnsExtension = 3;
+}
 
+
+message FolderObject{
+  string _id = 1;
+  string name = 2;
+}
+
+message FolderReply {
+  repeated FolderObject data = 1;
+}
+
+message TenantRequest{
+  string name = 1;
+  string dnsExtension = 2;
+}
+
+message UserRequest{
+  string firstName = 1;
+  string lastName = 2;
+  string email = 3;
+}
+
+message FolderRequest{
+  string name = 1;
+  string userId = 2;
+  string userEmail = 3;
+}
+
+message FolderGetRequest{
+  string userId = 1;
+  string userEmail = 2;
 }
