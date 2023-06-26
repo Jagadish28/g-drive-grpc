@@ -9,6 +9,8 @@ service Gdrive {
   rpc SayHello (HelloRequest) returns (HelloReply) {}
 
   rpc SayHelloAgain (HelloRequest) returns (HelloReply) {}
+  rpc GetAllTenants (HelloRequest) returns (TenantsReply) {}
+
 }
 
 // The request message containing the user's name.
@@ -19,4 +21,15 @@ message HelloRequest {
 // The response message containing the greetings
 message HelloReply {
   string message = 1;
+}
+
+message TenantsReply {
+  repeated TenantObject data = 1;
+}
+
+message TenantObject{
+  string _id = 1;
+  string name = 2;
+  string dnsExtension = 3;
+
 }

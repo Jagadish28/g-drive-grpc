@@ -1,9 +1,13 @@
 
-var PROTO_PATH = __dirname + '/proto/g-drive.proto';
+var PROTO_PATH =  '../proto/g-drive.proto';
 
 var parseArgs = require('minimist');
 var grpc = require('@grpc/grpc-js');
 var protoLoader = require('@grpc/proto-loader');
+const express = require('express');
+const app = express();
+
+const tenantHandler = require('./handlers/tenantHandler');
 
 var packageDefinition = protoLoader.loadSync(
     PROTO_PATH,
@@ -13,6 +17,7 @@ var packageDefinition = protoLoader.loadSync(
      defaults: true,
      oneofs: true
     });
+    
 var g_drive = grpc.loadPackageDefinition(packageDefinition).gdrive;
 
 function main() {
@@ -27,19 +32,23 @@ function main() {
   }
   var client = new g_drive.Gdrive(target,
                                        grpc.credentials.createInsecure());
-  var user;
-  if (argv._.length > 0) {
-    user = argv._[0]; 
-  } else {
-    user = 'world';
-  }
-  client.sayHello({name: user}, function(err, response) {
-    console.log('Greeting:', response.message);
+
+
+  app.use((req, res, next) => {
+    req.client = client;
+    next();
   });
 
-  client.sayHelloAgain({name: 'you'}, function(err, response) {
-    console.log('Greeting:', response.message);
+  app.get('/',tenantHandler.handleRequest);
+  app.get('/tenants', tenantHandler.handleAllTenantRequest);
+
+
+  const port = 3000;
+  app.listen(port, () => {
+    console.log(`Server listening on port ${port}`);
   });
+
+
 }
 
 main();
