@@ -49,6 +49,8 @@ function main() {
   app.post('/user', requestHandler.handleSaveUser);
   app.post('/folder', requestHandler.handleSaveFolder);
   app.get('/folder', requestHandler.handleGetFolder);
+  app.post('/folder/:id/file', requestHandler.handleSaveFile);
+  app.get('/folder/:id/file', requestHandler.handleGetFiles);
 
 
   const port = 3000;

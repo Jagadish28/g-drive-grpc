@@ -54,6 +54,16 @@ function getUserFolder(call, callback) {
   // Call the handler function from the requestHandler module
   requestHandler.handleGetUserFolders(call, callback);
 }
+
+function saveFile(call, callback) {
+  // Call the handler function from the requestHandler module
+  requestHandler.handleSaveFile(call, callback);
+}
+
+function getFiles(call, callback) {
+  // Call the handler function from the requestHandler module
+  requestHandler.handleGetFiles(call, callback);
+}
 /**
  * Starts an RPC server that receives requests for the G-Drive service at the
  * sample server port
@@ -62,7 +72,8 @@ function main() {
   var server = new grpc.Server();
   server.addService(g_drive.Gdrive.service, {sayHello: sayHello, 
     sayHelloAgain: sayHelloAgain,
-    getAllTenants: getAllTenants, saveTenant: saveTenant,saveUser:saveUser, saveFolder: saveFolder, getUserFolder:getUserFolder});
+    getAllTenants: getAllTenants, saveTenant: saveTenant,saveUser:saveUser, saveFolder: saveFolder, getUserFolder:getUserFolder,
+    saveFile:saveFile, getFiles:getFiles});
   server.bindAsync('0.0.0.0:50051', grpc.ServerCredentials.createInsecure(), () => {
     server.start();
     console.log("Node gPRC is ready!")

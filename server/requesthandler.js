@@ -120,8 +120,57 @@ async function handleData(call, callback) {
     }
   }
 
+
+
+  async function handleSaveFile(call,callback) {
+    try {
+      await client.connect();
+      const tenantDns = call.request.userEmail.split("@")[1].split(".")[0];
+      const folderId = call.request.folderId;
+      const dbName = "tenant_"+tenantDns;
+      const db = client.db(dbName);
+      const collection = db.collection("file");
+      const newDocument = {name:call.request.name, content:call.request.content, folder: new ObjectId(folderId)};
+      const document = await collection.insertOne(newDocument);
+      const result = {data:document,code:200,message:"file added!"};
+      callback(null, result);
+    } catch(error){
+      console.log("error-->",error)
+      const result = {code:500,message:"Error Occured while saving file"};
+      callback(null, result);
+    }
+    finally {
+      await client.close();
+    }
+  }
+
+  
+
+  async function handleGetFiles(call,callback) {
+    try {
+      await client.connect();
+      const tenantDns = call.request.userEmail.split("@")[1].split(".")[0];
+      const folderId = call.request.folderId;
+      const dbName = "tenant_"+tenantDns;
+      const db = client.db(dbName);
+      const collection = db.collection("file");
+      const document = await collection.find({folder:new ObjectId(folderId)}).toArray();
+      const result = {data:document};
+      callback(null, result);
+    } catch(error){
+      console.log("error-->",error)
+
+      const result = {code:500,message:"Error Occured while fetching folder"};
+      callback(null, result);
+    }
+    finally {
+      await client.close();
+    }
+  }
+
   
   
   
-  module.exports = { handleData, handleSaveTenant, handleSaveUser, handleSaveFolder, handleGetUserFolders };
+  
+  module.exports = { handleData, handleSaveTenant, handleSaveUser, handleSaveFolder, handleGetUserFolders, handleSaveFile, handleGetFiles };
   

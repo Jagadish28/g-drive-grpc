@@ -102,4 +102,46 @@ function handleRequest(req, response) {
   }
 
 
-  module.exports = { handleRequest, handleAllTenantRequest,handleAddTenant, handleSaveUser, handleSaveFolder, handleGetFolder};
+  function handleSaveFile(request, response) {
+
+    const cookieUserEmail = request.cookies['userEmail'];
+
+    request.body.userEmail = cookieUserEmail;
+    request.body.folderId = request.params.id;
+
+    request.client.saveFile(request.body,function(error, grpcResponse) {
+        if (error) {
+            response.writeHead(500, { 'Content-Type': 'text/plain' });
+            response.end('Internal Server Error');
+            return;
+        }        
+        const responseBody = JSON.stringify(grpcResponse);
+    
+        response.setHeader('Content-Type', 'application/json');
+        response.end(responseBody);
+    });
+
+  }
+
+  function handleGetFiles(request, response) {
+    const cookieUserEmail = request.cookies['userEmail'];
+    request.body.userEmail = cookieUserEmail;
+    request.body.folderId = request.params.id;
+
+    request.client.getFiles(request.body,function(error, grpcResponse) {
+        if (error) {
+            response.writeHead(500, { 'Content-Type': 'text/plain' });
+            response.end('Internal Server Error');
+            return;
+        }        
+        const responseBody = JSON.stringify(grpcResponse);
+    
+        response.setHeader('Content-Type', 'application/json');
+        response.end(responseBody);
+    });
+
+  }
+
+
+
+  module.exports = { handleRequest, handleAllTenantRequest,handleAddTenant, handleSaveUser, handleSaveFolder, handleGetFolder,handleSaveFile, handleGetFiles};

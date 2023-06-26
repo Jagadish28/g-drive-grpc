@@ -14,6 +14,8 @@ service Gdrive {
   rpc SaveUser (UserRequest) returns (SuccessReply) {}
   rpc SaveFolder (FolderRequest) returns (SuccessReply) {}
   rpc GetUserFolder (FolderGetRequest) returns (FolderReply) {}
+  rpc SaveFile (FileRequest) returns (SuccessReply) {}
+  rpc getFiles (FilesGetRequest) returns (FileReply) {}
 
 }
 
@@ -72,4 +74,27 @@ message FolderRequest{
 message FolderGetRequest{
   string userId = 1;
   string userEmail = 2;
+}
+
+message FileRequest{
+  string name = 1;
+  string folderId = 2;
+  string content = 3;
+  string userEmail = 4;
+
+}
+
+message FilesGetRequest{
+  string folderId = 1;
+  string userEmail = 2;
+}
+
+message FileObject{
+  string _id = 1;
+  string name = 2;
+  string content = 3;
+}
+
+message FileReply {
+  repeated FileObject data = 1;
 }
