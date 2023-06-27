@@ -1,4 +1,4 @@
 - In root folder hit 'npm i'
 - get into server directory and hit 'node server.js'
-- get into client directory and hit 'node server.js'
+- get into client directory and hit 'node client.js'
 
